@@ -1,0 +1,37 @@
+# 开启SQL语句输出
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    map-underscore-to-camel-case: false
+# 如果数据库中的属性名为"userID",必须设置上面这条,不然会被错误地转换为"user_i_d"
+
+# 设置服务器端口为8088
+server:
+  port: 8088
+spring:
+  # 指定数据源
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: 131210
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/zuoye?useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    # 自动更新重启
+  # 设置时区
+  jackson:
+    time-zone: GMT+8
+  devtools:
+    restart:
+      additional-paths: src/main/java
+      enabled: true
+  mvc:
+    # 适配SpringBoot2.6.X 和 Swagger之前的问题
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+  web:
+    resources:
+      static-locations: /upload/

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xenon.mapper.ProvisionMapper">
+
+    <resultMap id="BaseResultMap" type="com.xenon.entity.Provision">
+            <id property="provisionId" column="provision_id" jdbcType="INTEGER"/>
+            <result property="materialId" column="material_id" jdbcType="INTEGER"/>
+            <result property="supplierId" column="supplier_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        provision_id,material_id,supplier_id
+    </sql>
+
+    <insert id="insertProvision" parameterType="com.xenon.entity.Provision" useGeneratedKeys="true">
+        INSERT INTO provision (material_id, supplier_id)
+        VALUES (#{provision.materialId}, #{provision.supplierId})
+    </insert>
+
+    <update id="updateProvision" parameterType="com.xenon.entity.Provision">
+        UPDATE provision
+        SET supplier_id = #{provision.supplier_id}
+        WHERE material_id = #{provision.material_id}
+    </update>
+
+
+
+</mapper>

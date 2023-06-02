@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xenon.mapper.MaterialMapper">
+
+    <resultMap id="BaseResultMap" type="com.xenon.entity.Material">
+        <id property="materialId" column="material_id" jdbcType="INTEGER"/>
+        <result property="materialName" column="material_name" jdbcType="VARCHAR"/>
+        <result property="materialStatus" column="material_status" jdbcType="VARCHAR"/>
+        <result property="materialPrice" column="material_price" jdbcType="DECIMAL"/>
+        <result property="materialCategory" column="material_category" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        material_id
+        ,material_name,material_status,
+        material_price,material_category
+    </sql>
+
+    <sql id="Query_List">
+        <where>
+            <!-- 使用动态 SQL 构建多个查询条件 -->
+            <!-- 物资id -->
+            <if test="material.materialId != null and material.materialId != ''">
+                AND m.material_id = #{material.materialId}
+            </if>
+            <!-- 物资名称 -->
+            <if test="material.materialName != null and material.materialName != ''">
+                AND m.material_name LIKE CONCAT('%', #{material.materialName}, '%')
+            </if>
+            <!-- 物资状态 -->
+            <if test="material.materialStatus != null and material.materialStatus != ''">
+                AND m.material_status = #{material.materialStatus}
+            </if>
+            <!-- 物资类别 -->
+            <if test="material.materialPrice != null and material.materialPrice != ''">
+                AND m.material_price LIKE CONCAT('%', #{material.materialPrice}, '%')
+            </if>
+            <!-- 供应商 -->
+            <if test="material.supplier != null">
+                <!-- 供应商名称 -->
+                <if test="material.supplier.supplierName != null and material.supplier.supplierName != ''">
+                    AND s.supplier_name LIKE CONCAT('%', #{material.supplier.supplierName}, '%')
+                </if>
+                <!-- 供应商联系人 -->
+                <if test="material.supplier.contactName != null and material.supplier.contactName != ''">
+                    AND s.contact_name LIKE CONCAT('%', #{material.supplier.contactName}, '%')
+                </if>
+
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查询所有物资信息及其供应商信息 -->
+    <select id="selectMaterialAndSupplier" resultMap="MaterialResultMapWithSupplier">
+        SELECT m.material_id AS material_id, m.material_name, m.material_status,
+               m.material_price, m.material_category,
+               s.supplier_id AS supplier_id, s.supplier_name, s.contact_person,
+               s.contact_number, s.supplier_address, s.supplier_email
+        FROM material m
+                 LEFT JOIN provision p ON m.material_id = p.material_id
+                 LEFT JOIN supplier s ON p.supplier_id = s.supplier_id
+        <include refid="Query_List"/>
+    </select>
+    <!-- 定义查询结果的映射配置 -->
+    <resultMap id="MaterialResultMapWithSupplier" type="com.xenon.entity.Material" extends="BaseResultMap">
+        <association property="supplier" resultMap="com.xenon.mapper.SupplierMapper.BaseResultMap"/>
+    </resultMap>
+
+
+    <!-- 插入Material并返回此次插入生成的ID值 -->
+    <insert id="insertMaterial" parameterType="com.xenon.entity.Material" useGeneratedKeys="true">
+
+        <!-- 插入Material -->
+        INSERT INTO material (material_name, material_status, material_price, material_category)
+        VALUES (#{material.materialName}, #{material.materialStatus}, #{material.materialPrice}, #{material.materialCategory})
+
+        <!-- 插入Material并获取自动生成的materialId -->
+        <selectKey keyProperty="material.materialId" keyColumn="material_id" resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <!-- 更新 Material 信息 -->
+    <update id="updateMaterial" parameterType="com.xenon.entity.Material">
+        UPDATE material
+        SET material_name = #{material.materialName},
+            material_status = #{material.materialStatus},
+            material_price = #{material.materialPrice},
+            material_category = #{material.materialCategory}
+        WHERE material_id = #{material.materialId}
+
+
+    </update>
+
+</mapper>
