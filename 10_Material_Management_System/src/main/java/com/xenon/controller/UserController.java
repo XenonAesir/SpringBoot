@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user")
 @CrossOrigin
-@Api(tags = "用户登陆、登出及Token解析")
+@Api(tags = "用户登陆、登出、注册及Token解析")
 public class UserController
 {
     @Autowired
@@ -40,5 +40,13 @@ public class UserController
     public Result logout()
     {
         return userServiceImpl.handleLogout();
+    }
+
+    @ApiOperation("用户注册")
+    @ApiImplicitParam(name = "user", value = "user对象", paramType = "body", required = true, dataType = "User")
+    @PostMapping("/register")
+    public Result register(@RequestBody User user)
+    {
+        return userServiceImpl.handleRegister(user);
     }
 }

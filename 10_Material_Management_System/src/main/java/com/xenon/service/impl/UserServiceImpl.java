@@ -3,7 +3,6 @@ package com.xenon.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xenon.entity.User;
-import com.xenon.entity.UserRole;
 import com.xenon.mapper.DepartmentMapper;
 import com.xenon.mapper.UserRoleMapper;
 import com.xenon.service.UserService;
@@ -55,6 +54,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public Result handleLogout()
     {
         return Result.pass();
+    }
+
+    public Result handleRegister(User user)
+    {
+        User userName = this.getOne(new QueryWrapper<User>().eq("user_name", user.getUserName()));
+        if (userName != null)
+        {
+            return Result.error("用户名已存在");
+        }
+        return Result.pass().data("data", this.save(user));
     }
 }
 
