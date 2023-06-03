@@ -34,15 +34,11 @@ public class User implements Serializable {
      * 用户部门ID
      */
     private Long departmentId;
-    @TableField(exist = false)
-    private Department department;
 
     /**
      * 用户角色ID
      */
     private Long userRoleId;
-    @TableField(exist = false)
-    private UserRole userRole;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

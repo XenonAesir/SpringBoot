@@ -17,13 +17,13 @@ public class MaterialStatusController
 {
     
     @Autowired
-    MaterialStatusServiceImpl materialStatusStatusService;
+    MaterialStatusServiceImpl materialStatusService;
 
     @ApiOperation("获取全部的物资状态字典")
     @GetMapping("/all")
     public Result getAllMaterialStatus()
     {
-        return materialStatusStatusService.getAllMaterialStatus();
+        return materialStatusService.getAllMaterialStatus();
     }
 
     @ApiOperation("传递MaterialStatus对象存储到数据库")
@@ -31,7 +31,7 @@ public class MaterialStatusController
     @PostMapping("/save")
     public Result saveMaterialStatus(@RequestBody MaterialStatus materialStatus)
     {
-        return materialStatusStatusService.saveMaterialStatus(materialStatus);
+        return materialStatusService.saveMaterialStatus(materialStatus);
     }
 
     @ApiOperation("传递MaterialStatus对象进行更新修改")
@@ -39,7 +39,7 @@ public class MaterialStatusController
     @PutMapping("/update")
     public Result updateMaterialStatus(@RequestBody MaterialStatus materialStatus)
     {
-        return materialStatusStatusService.updateMaterialStatus(materialStatus);
+        return materialStatusService.updateMaterialStatus(materialStatus);
     }
 
     @ApiOperation("根据MaterialStatus对象Id从数据库删除")
@@ -47,6 +47,6 @@ public class MaterialStatusController
     @DeleteMapping("/delete/{materialStatusId}")
     public Result deleteMaterialStatus(@PathVariable Integer materialStatusId)
     {
-        return materialStatusStatusService.deleteMaterialStatus(materialStatusId);
+        return materialStatusService.deleteMaterialStatus(materialStatusId);
     }
 }

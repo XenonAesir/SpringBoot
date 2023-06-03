@@ -25,23 +25,16 @@ public class Allocation implements Serializable {
      * 物资ID
      */
     private Long materialId;
-    @TableField(exist = false)
-    private Material material;
-
 
     /**
      * 管理员ID
      */
     private Long adminId;
-    @TableField(exist = false)
-    private Admin admin;
 
     /**
      * 用户ID
      */
     private Long userId;
-    @TableField(exist = false)
-    private User user;
 
     /**
      * 分配日期

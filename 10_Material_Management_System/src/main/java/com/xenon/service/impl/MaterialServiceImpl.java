@@ -77,6 +77,8 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
                 put("material_status_id", material.getMaterialStatusId());
                 put("material_type_id", material.getMaterialTypeId());
                 put("is_allocated", material.getIsAllocated());
+                put("is_asset", material.getIsAsset());
+                put("asset_id", material.getAssetID());
             }
         };
 
@@ -122,6 +124,10 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
         // 更新信息
         try
         {
+            if (material.getIsAsset() != null || material.getAssetID() != null)
+            {
+                return Result.error("不允许修改资产类型及ID");
+            }
             this.saveOrUpdate(material);
 
         }
