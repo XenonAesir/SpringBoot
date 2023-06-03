@@ -1,13 +1,12 @@
 package com.xenon.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.xenon.entity.Allocation;
 import com.xenon.entity.Material;
 import com.xenon.mapper.*;
 import com.xenon.service.MaterialService;
 import com.xenon.utils.Result;
+import com.xenon.utils.UUIDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,19 +24,6 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
 {
     @Autowired
     MaterialMapper materialMapper;
-
-    @Autowired
-    AdminMapper adminMapper;
-    @Autowired
-    AllocationMapper allocationMapper;
-    @Autowired
-    SupplierMapper supplierMapper;
-    @Autowired
-    MaterialStatusMapper materialStatusMapper;
-    @Autowired
-    MaterialTypeMapper materialTypeMapper;
-    @Autowired
-    MaterialUnitMapper materialUnitMapper;
 
     /***
      * 获取全部设备全部信息
@@ -78,7 +64,6 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
                 put("material_type_id", material.getMaterialTypeId());
                 put("is_allocated", material.getIsAllocated());
                 put("is_asset", material.getIsAsset());
-                put("asset_id", material.getAssetID());
             }
         };
 
@@ -102,6 +87,11 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
     public Result saveMaterial(Material material)
     {
 
+        if (material.getIsAsset() == 1)
+        {
+            material.setAssetNumber(UUIDUtils.generateUniqueKeyMD5());
+        }
+
         try
         {
             // 插入 material 表
@@ -124,7 +114,7 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
         // 更新信息
         try
         {
-            if (material.getIsAsset() != null || material.getAssetID() != null)
+            if (material.getIsAsset() != null || material.getAssetNumber() != null)
             {
                 return Result.error("不允许修改资产类型及ID");
             }

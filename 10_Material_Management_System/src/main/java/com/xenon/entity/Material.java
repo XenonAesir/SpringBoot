@@ -67,9 +67,9 @@ public class Material implements Serializable {
     private Integer isAsset;
 
     /**
-     * 固定资产ID
+     * 固定资产序列号
      */
-    private Integer assetId;
+    private String assetNumber;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
