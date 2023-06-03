@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xenon.entity.Department;
 import com.xenon.service.DepartmentService;
 import com.xenon.mapper.DepartmentMapper;
+import com.xenon.utils.Result;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,6 +16,10 @@ import org.springframework.stereotype.Service;
 public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Department>
     implements DepartmentService{
 
+    public Result getAllDepartment()
+    {
+        return Result.pass().data("data", this.list());
+    }
 }
 
 

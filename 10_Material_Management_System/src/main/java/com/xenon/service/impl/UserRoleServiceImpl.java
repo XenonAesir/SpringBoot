@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xenon.entity.UserRole;
 import com.xenon.service.UserRoleService;
 import com.xenon.mapper.UserRoleMapper;
+import com.xenon.utils.Result;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,6 +16,11 @@ import org.springframework.stereotype.Service;
 public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
     implements UserRoleService{
 
+    public Result getAllUserRole()
+    {
+        return Result.pass("用户角色字典已传输").data("data", this.list());
+
+    }
 }
 
 

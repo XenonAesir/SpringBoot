@@ -3,10 +3,14 @@ package com.xenon.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xenon.entity.User;
+import com.xenon.entity.UserRole;
+import com.xenon.mapper.DepartmentMapper;
+import com.xenon.mapper.UserRoleMapper;
 import com.xenon.service.UserService;
 import com.xenon.mapper.UserMapper;
 import com.xenon.utils.JwtUtils;
 import com.xenon.utils.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,15 +21,24 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService
 {
+    @Autowired
+    DepartmentMapper departmentMapper;
+    @Autowired
+    UserRoleMapper userRoleMapper;
+
     public Result handleLogin(User user)
     {
-        User userInfo = getOne(new QueryWrapper<User>().eq("user_name", user.getUserName()));
-        if (userInfo != null && user.getUserPassword().equals(userInfo.getUserPassword()))
+        User userInfo = getOne(new QueryWrapper<User>()
+                .eq("user_name", user.getUserName())
+                .eq("user_password", user.getUserPassword()));
+        if (userInfo != null)
         {
             String token = JwtUtils.getToken(userInfo.getUserName());
             return Result.pass()
                     .data("token", token)
-                    .data("userName", userInfo.getUserName());
+                    .data("userName", userInfo.getUserName())
+                    .data("userDepartment", departmentMapper.selectById(userInfo.getDepartmentId()))
+                    .data("userRole", userRoleMapper.selectById(userInfo.getUserRoleId()));
         }
         return Result.error("用户名或密码错误");
     }

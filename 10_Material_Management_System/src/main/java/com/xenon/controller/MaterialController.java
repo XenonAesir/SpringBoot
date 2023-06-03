@@ -27,12 +27,12 @@ public class MaterialController
 
     @ApiOperation("传递Material对象查询结果")
     @ApiImplicitParam(name = "material", value = "Material对象", paramType = "body", required = true, dataType = "Material")
-    @GetMapping("/search")
-    public Result getMaterialsBy(Material material)
+    @PostMapping("/search")
+    public Result getMaterialsBy(@RequestBody Material material)
     {
         return materialServiceImpl.getMaterialsBy(material);
     }
-    //
+
     @ApiOperation("传递Material对象存储到数据库")
     @ApiImplicitParam(name = "material", value = "Material对象", paramType = "body", required = true, dataType = "Material")
     @PostMapping("/save")

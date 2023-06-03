@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/materialType")
 @CrossOrigin
-@Api(tags = "物资状态字典")
+@Api(tags = "物资字典—类型")
 public class MaterialTypeController
 {
 

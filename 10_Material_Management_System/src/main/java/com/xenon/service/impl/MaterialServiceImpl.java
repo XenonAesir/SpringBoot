@@ -25,6 +25,11 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
     @Autowired
     MaterialMapper materialMapper;
 
+    @Autowired
+    SupplierMapper supplierMapper;
+    // @Autowired
+    // AdminMapper adminMapper;
+
     /***
      * 获取全部设备全部信息
      * @return 操作结果
@@ -33,14 +38,14 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
     {
         List<Material> allMaterials = this.list();
 
-        // for (Material material : allMaterials)
-        // {
-        //     material.setAdmin(adminMapper.selectById(material.getAdminId()));
-        //     material.setSupplier(supplierMapper.selectById(material.getSupplierId()));
-        //     material.setMaterialStatus(materialStatusMapper.selectById(material.getMaterialStatusId()));
-        //     material.setMaterialType(materialTypeMapper.selectById(material.getMaterialTypeId()));
-        //     material.setMaterialUnit(materialUnitMapper.selectById(material.getMaterialUnitId()));
-        // }
+        for (Material material : allMaterials)
+        {
+            // material.setAdmin(adminMapper.selectById(material.getAdminId()));
+            material.setSupplier(supplierMapper.selectById(material.getSupplierId()));
+            // material.setMaterialStatus(materialStatusMapper.selectById(material.getMaterialStatusId()));
+            // material.setMaterialType(materialTypeMapper.selectById(material.getMaterialTypeId()));
+            // material.setMaterialUnit(materialUnitMapper.selectById(material.getMaterialUnitId()));
+        }
 
         return Result.pass()
                 .data("data", allMaterials);
@@ -73,6 +78,14 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
 
 
         List<Material> allMaterials = materialMapper.selectList(wrapper);
+        for (Material material0 : allMaterials)
+        {
+            // material.setAdmin(adminMapper.selectById(material.getAdminId()));
+            material0.setSupplier(supplierMapper.selectById(material0.getSupplierId()));
+            // material.setMaterialStatus(materialStatusMapper.selectById(material.getMaterialStatusId()));
+            // material.setMaterialType(materialTypeMapper.selectById(material.getMaterialTypeId()));
+            // material.setMaterialUnit(materialUnitMapper.selectById(material.getMaterialUnitId()));
+        }
 
 
         return Result.pass()
@@ -119,6 +132,7 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
                 return Result.error("不允许修改资产类型及ID");
             }
             this.saveOrUpdate(material);
+
 
         }
         catch (Exception e)

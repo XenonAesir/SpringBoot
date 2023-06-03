@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/materialStatus")
 @CrossOrigin
-@Api(tags = "物资状态字典")
+@Api(tags = "物资字典—状态")
 public class MaterialStatusController
 {
     
