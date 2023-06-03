@@ -49,6 +49,25 @@ public class Result
         return result;
     }
 
+    public static Result errorFK()
+    {
+        Result result = new Result();
+        result.setSuccess(false);
+        result.setCode(ResultEnum.DB_FK_ERROR.code);
+        result.setMessage(ResultEnum.DB_FK_ERROR.description);
+        return result;
+    }
+
+    public static Result errorIC()
+    {
+        Result result = new Result();
+        result.setSuccess(false);
+        result.setCode(ResultEnum.DB_IC_ERROR.code);
+        result.setMessage(ResultEnum.DB_IC_ERROR.description);
+        return result;
+    }
+
+
     public static Result error()
     {
         Result result = new Result();

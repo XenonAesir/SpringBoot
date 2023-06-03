@@ -47,14 +47,14 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
     {
         List<Material> allMaterials = this.list();
 
-        for (Material material : allMaterials)
-        {
-            material.setAdmin(adminMapper.selectById(material.getAdminId()));
-            material.setSupplier(supplierMapper.selectById(material.getSupplierId()));
-            material.setMaterialStatus(materialStatusMapper.selectById(material.getMaterialStatusId()));
-            material.setMaterialType(materialTypeMapper.selectById(material.getMaterialTypeId()));
-            material.setMaterialUnit(materialUnitMapper.selectById(material.getMaterialUnitId()));
-        }
+        // for (Material material : allMaterials)
+        // {
+        //     material.setAdmin(adminMapper.selectById(material.getAdminId()));
+        //     material.setSupplier(supplierMapper.selectById(material.getSupplierId()));
+        //     material.setMaterialStatus(materialStatusMapper.selectById(material.getMaterialStatusId()));
+        //     material.setMaterialType(materialTypeMapper.selectById(material.getMaterialTypeId()));
+        //     material.setMaterialUnit(materialUnitMapper.selectById(material.getMaterialUnitId()));
+        // }
 
         return Result.pass()
                 .data("data", allMaterials);
@@ -106,7 +106,7 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
             this.saveOrUpdate(material);
         }catch (Exception e)
         {
-            return Result.error("新增设备失败，请检查各条目数据正确性");
+            return Result.errorIC();
         }
 
         return Result.pass("新增设备成功");
@@ -127,7 +127,7 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
         }
         catch (Exception e)
         {
-            return Result.error("更新失败，请检查数据是否有误");
+            return Result.errorIC();
         }
         return Result.pass("修改信息成功");
     }

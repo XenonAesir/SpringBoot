@@ -37,29 +37,29 @@ public class Material implements Serializable
      * 物资单位ID
      */
     private Long materialUnitId;
-    @TableField(exist = false)
-    private MaterialUnit materialUnit;
+    // @TableField(exist = false)
+    // private MaterialUnit materialUnit;
 
     /**
      * 物资类型ID
      */
     private Long materialTypeId;
-    @TableField(exist = false)
-    private MaterialType materialType;
+    // @TableField(exist = false)
+    // private MaterialType materialType;
 
     /**
      * 物资状态ID
      */
     private Long materialStatusId;
-    @TableField(exist = false)
-    private MaterialStatus materialStatus;
+    // @TableField(exist = false)
+    // private MaterialStatus materialStatus;
 
     /**
      * 管理员ID
      */
     private Long adminId;
-    @TableField(exist = false)
-    private Admin admin;
+    // @TableField(exist = false)
+    // private Admin admin;
 
     /**
      * 是否已分配
@@ -70,8 +70,8 @@ public class Material implements Serializable
      * 供应商ID
      */
     private Long supplierId;
-    @TableField(exist = false)
-    private Supplier supplier;
+    // @TableField(exist = false)
+    // private Supplier supplier;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
