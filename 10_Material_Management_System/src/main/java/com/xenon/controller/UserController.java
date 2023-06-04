@@ -49,4 +49,12 @@ public class UserController
     {
         return userServiceImpl.handleRegister(user);
     }
+
+    @ApiOperation("获取所有用户")
+    @GetMapping("/all")
+    public Result getAllUser()
+    {
+        return userServiceImpl.getAllUser();
+    }
+
 }

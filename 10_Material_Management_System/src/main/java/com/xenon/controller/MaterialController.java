@@ -1,8 +1,14 @@
 package com.xenon.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xenon.entity.Material;
+import com.xenon.entity.MaterialStatus;
+import com.xenon.entity.MaterialType;
+import com.xenon.mapper.MaterialStatusMapper;
+import com.xenon.mapper.MaterialTypeMapper;
 import com.xenon.service.impl.MaterialServiceImpl;
 import com.xenon.utils.Result;
+import com.xenon.utils.UUIDUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -17,6 +23,8 @@ public class MaterialController
 {
     @Autowired
     MaterialServiceImpl materialServiceImpl;
+    @Autowired
+    MaterialTypeMapper materialTypeMapper;
 
     @ApiOperation("获取全部物资及其供应商信息")
     @GetMapping("/all")
@@ -56,5 +64,6 @@ public class MaterialController
     {
         return materialServiceImpl.deleteMaterial(materialId);
     }
+
 
 }

@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- * 
+ *
  * @TableName material
  */
 @ApiModel("Material_物资类")
@@ -61,8 +61,6 @@ public class Material implements Serializable {
      */
     @ApiModelProperty(value = "录入/采购物资的管理员")
     private Long adminId;
-    // @TableField(exist = false)
-    // private Admin admin;
 
     /**
      * 是否已分配
@@ -76,7 +74,7 @@ public class Material implements Serializable {
     @ApiModelProperty(value = "物资所属的供应商ID")
     private Long supplierId;
     @TableField(exist = false)
-    private Supplier supplier;
+    Supplier supplier;
 
     /**
      * 是否为固定资产

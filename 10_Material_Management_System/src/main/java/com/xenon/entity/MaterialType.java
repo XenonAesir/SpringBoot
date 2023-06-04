@@ -31,6 +31,12 @@ public class MaterialType implements Serializable {
     @ApiModelProperty(value = "物资类型名")
     private String materialTypeName;
 
+    /**
+     * 物资类别是否是固定资产
+     */
+    @ApiModelProperty(value = "物资类别是否是固定资产")
+    private Integer materialTypeAsset;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

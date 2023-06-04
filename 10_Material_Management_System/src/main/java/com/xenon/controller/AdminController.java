@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "管理员登陆、登出及Token解析")
 public class AdminController
 {
+
     @Autowired
     AdminServiceImpl adminServiceImpl;
 

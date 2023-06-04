@@ -13,7 +13,7 @@ public class JwtUtils
     // 7天过期，单位为秒
     private static final long expire = 604800;
 
-    // 生成Token的密匙，这里设置为8位
+    // 生成Token的密匙，这里设置为64位
     private static final String secret = "abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234";
 
     // 生成Token

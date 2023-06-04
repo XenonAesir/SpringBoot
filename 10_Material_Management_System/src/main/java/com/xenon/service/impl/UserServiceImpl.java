@@ -12,6 +12,8 @@ import com.xenon.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author Xenon
  * @description 针对表【user】的数据库操作Service实现
@@ -24,6 +26,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     DepartmentMapper departmentMapper;
     @Autowired
     UserRoleMapper userRoleMapper;
+
 
     public Result handleLogin(User user)
     {
@@ -64,6 +67,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return Result.error("用户名已存在");
         }
         return Result.pass().data("data", this.save(user));
+    }
+
+    public Result getAllUser()
+    {
+        List<User> userList = this.list();
+
+
+        for (User user : userList)
+        {
+            user.setUserPassword("");
+            user.setDepartment(departmentMapper.selectById(user.getDepartmentId()));
+            user.setUserRole(userRoleMapper.selectById(user.getUserRoleId()));
+        }
+
+
+        return Result.pass().data("data", userList);
     }
 }
 

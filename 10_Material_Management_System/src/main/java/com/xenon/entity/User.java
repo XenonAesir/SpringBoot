@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.util.List;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -52,6 +53,12 @@ public class User implements Serializable {
     private Long userRoleId;
     @TableField(exist = false)
     private UserRole userRole;
+
+    /***
+     * 用户所分配到的设备
+     */
+    @TableField(exist = false)
+    private List<Material> materialList;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

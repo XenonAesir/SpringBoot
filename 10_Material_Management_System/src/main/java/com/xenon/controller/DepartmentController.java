@@ -23,4 +23,11 @@ public class DepartmentController
         return departmentService.getAllDepartment();
     }
 
+
+    @ApiOperation("获取部门员工及设备分配情况")
+    @GetMapping("/{departmentID}")
+    public Result getDepartmentAllUser(@PathVariable Integer departmentID)
+    {
+        return departmentService.getDepartmentAllUser(departmentID);
+    }
 }

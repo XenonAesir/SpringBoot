@@ -2,14 +2,20 @@ package com.xenon.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.xenon.entity.Material;
+import com.xenon.echairs.FormData;
+import com.xenon.entity.*;
 import com.xenon.mapper.*;
 import com.xenon.service.MaterialService;
 import com.xenon.utils.Result;
+import com.xenon.utils.StaticVariable;
 import com.xenon.utils.UUIDUtils;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +35,18 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
     SupplierMapper supplierMapper;
     // @Autowired
     // AdminMapper adminMapper;
+    @Autowired
+    MaterialTypeMapper materialTypeMapper;
+    @Autowired
+    DepartmentMapper departmentMapper;
+    @Autowired
+    UserMapper userMapper;
+    @Autowired
+    AllocationMapper allocationMapper;
+
+    @Autowired
+    MaterialStatusServiceImpl materialStatusService;
+
 
     /***
      * 获取全部设备全部信息
@@ -100,16 +118,27 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
     public Result saveMaterial(Material material)
     {
 
-        if (material.getIsAsset() == 1)
+        System.out.println(material);
+
+        MaterialType materialType = materialTypeMapper.selectById(material.getMaterialTypeId());
+        if (materialType.getMaterialTypeAsset() == 1)
         {
+            material.setIsAsset(1);
             material.setAssetNumber(UUIDUtils.generateUniqueKeyMD5());
+        }
+        else
+        {
+            material.setIsAsset(0);
         }
 
         try
         {
+            material.setAdminId(StaticVariable.ADMIN_ID);
             // 插入 material 表
             this.saveOrUpdate(material);
-        }catch (Exception e)
+
+        }
+        catch (Exception e)
         {
             return Result.errorIC();
         }
@@ -124,16 +153,24 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
      */
     public Result updateMaterial(Material material)
     {
+
+        System.out.println(material);
+
+        MaterialType materialType = materialTypeMapper.selectById(material.getMaterialTypeId());
+        if (materialType.getMaterialTypeAsset() == 1)
+        {
+            material.setIsAsset(1);
+            material.setAssetNumber(UUIDUtils.generateUniqueKeyMD5());
+        }
+        else
+        {
+            material.setIsAsset(0);
+        }
+
         // 更新信息
         try
         {
-            if (material.getIsAsset() != null || material.getAssetNumber() != null)
-            {
-                return Result.error("不允许修改资产类型及ID");
-            }
             this.saveOrUpdate(material);
-
-
         }
         catch (Exception e)
         {
@@ -170,6 +207,66 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
 
     }
 
+    /***
+     * 统计物资信息
+     * @return 操作结果
+     */
+    public Result getAllMaterialData()
+    {
+        // 三种统计数据
+        ArrayList<FormData> statusList = new ArrayList<>();
+        ArrayList<FormData> departmentPriceAmountList = new ArrayList<>();
+        ArrayList<ArrayList<?>> departmentMaterialAmountList = new ArrayList<>();
+
+        ArrayList<String> departmentList = new ArrayList<>();
+        ArrayList<Integer> materialAmountList = new ArrayList<>();
+
+        // 一个循环代表一个连接操作
+
+        // 查询状态-物资之间的关系
+        for (MaterialStatus materialStatus : materialStatusService.list())
+        {
+            statusList.add(new FormData(
+                            materialStatus.getMaterialStatusName(),
+                            this.count(new QueryWrapper<Material>().eq("material_status_id", materialStatus.getMaterialStatusId())))
+                    );
+        }
+
+        // 查询部门-用户-分配-物资之间的关系
+        for (Department department : departmentMapper.selectList(null))
+        {
+            BigDecimal priceAmount = new BigDecimal("0.00");
+            Integer materialCounter = 0;
+            for (User user : userMapper.selectList(new QueryWrapper<User>().eq("department_id", department.getDepartmentId())))
+            {
+                for (Allocation allocation : allocationMapper.selectList(new QueryWrapper<Allocation>().eq("user_id", user.getUserId())))
+                {
+                    BigDecimal materialPrice = materialMapper.selectById(allocation.getMaterialId()).getMaterialPrice();
+                    priceAmount = priceAmount.add(materialPrice);
+                    materialCounter++;
+                }
+
+
+            }
+            departmentPriceAmountList.add(new FormData(
+                    department.getDepartmentName(),
+                    priceAmount
+                    ));
+
+
+            departmentList.add(department.getDepartmentName());
+            materialAmountList.add(materialCounter);
+
+        }
+
+        departmentMaterialAmountList.add(departmentList);
+        departmentMaterialAmountList.add(materialAmountList);
+
+        return Result.pass()
+                .data("statusList", statusList)
+                .data("departmentPriceAmountList", departmentPriceAmountList)
+                .data("departmentMaterialAmountList", departmentMaterialAmountList);
+    }
 }
 
 
