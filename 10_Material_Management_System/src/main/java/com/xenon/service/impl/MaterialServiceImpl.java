@@ -2,18 +2,16 @@ package com.xenon.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.xenon.echairs.FormData;
+import com.xenon.echarts.FormData;
 import com.xenon.entity.*;
 import com.xenon.mapper.*;
 import com.xenon.service.MaterialService;
 import com.xenon.utils.Result;
 import com.xenon.utils.StaticVariable;
 import com.xenon.utils.UUIDUtils;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -165,6 +163,7 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
         else
         {
             material.setIsAsset(0);
+            material.setAssetNumber("");
         }
 
         // 更新信息

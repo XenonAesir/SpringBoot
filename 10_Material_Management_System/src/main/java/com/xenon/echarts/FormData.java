@@ -1,4 +1,4 @@
-package com.xenon.echairs;
+package com.xenon.echarts;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
