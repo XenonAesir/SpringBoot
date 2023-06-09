@@ -2,6 +2,7 @@ package com.xenon.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xenon.entity.Admin;
 import com.xenon.entity.User;
 import com.xenon.mapper.DepartmentMapper;
 import com.xenon.mapper.UserRoleMapper;
@@ -9,7 +10,9 @@ import com.xenon.service.UserService;
 import com.xenon.mapper.UserMapper;
 import com.xenon.utils.JwtUtils;
 import com.xenon.utils.Result;
+import com.xenon.utils.StaticVariable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,19 +33,35 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     public Result handleLogin(User user)
     {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
         User userInfo = getOne(new QueryWrapper<User>()
                 .eq("user_name", user.getUserName())
-                .eq("user_password", user.getUserPassword()));
+        );
+
         if (userInfo != null)
         {
-            String token = JwtUtils.getToken(userInfo.getUserName());
-            return Result.pass()
-                    .data("token", token)
-                    .data("userName", userInfo.getUserName())
-                    .data("userDepartment", departmentMapper.selectById(userInfo.getDepartmentId()))
-                    .data("userRole", userRoleMapper.selectById(userInfo.getUserRoleId()));
+            String rawPassword = user.getUserPassword();
+            String encodedPassword = userInfo.getUserPassword();
+            boolean matches = bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
+
+            System.out.println(matches + "原生密码" + rawPassword + "加密密码" + encodedPassword);
+
+            if (matches)
+            {
+                String token = JwtUtils.getToken(userInfo.getUserName());
+                return Result.pass()
+                        .data("token", token)
+                        .data("userName", userInfo.getUserName())
+                        .data("userDepartment", departmentMapper.selectById(userInfo.getDepartmentId()))
+                        .data("userRole", userRoleMapper.selectById(userInfo.getUserRoleId()));
+            }
+            else
+            {
+                return Result.error("密码错误");
+            }
         }
-        return Result.error("用户名或密码错误");
+        return Result.error("用户不存在");
     }
 
     public Result handleInfo(String token)
@@ -65,6 +84,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (userName != null)
         {
             return Result.error("用户名已存在");
+        }
+        else
+        {
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            String rawPassword = user.getUserPassword();
+            String encodedPassword = bCryptPasswordEncoder.encode(rawPassword);
+            user.setUserPassword(encodedPassword);
         }
         return Result.pass().data("data", this.save(user));
     }

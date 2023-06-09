@@ -1,6 +1,8 @@
 import com.xenon.utils.UUIDUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.Scanner;
 
 public class UUIDTest
 {
@@ -13,6 +15,16 @@ public class UUIDTest
         //     System.out.println(s1);
         // }
 
-        System.out.println(LocalDateTime.now());
+        // System.out.println(LocalDateTime.now());
+
+        while(true){
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            Scanner scanner = new Scanner(System.in);
+            String rawPassword = scanner.nextLine();
+            String encodedPassword = bCryptPasswordEncoder.encode(rawPassword);
+
+            System.out.println("加密密码" + encodedPassword);
+        }
+
     }
 }
